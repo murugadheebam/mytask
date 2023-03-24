@@ -2,7 +2,10 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { TextField,Button } from '@mui/material';
-import { createcourse } from './services/courseservice';
+import { useNavigate } from "react-router-dom";
+import { createcourse } from '../services/courseservice';
+
+
 
 const CourseSchema = Yup.object().shape({
     name: Yup.string()
@@ -12,6 +15,8 @@ const CourseSchema = Yup.object().shape({
 });
 
 const Course = () => {
+    const navigation = useNavigate()
+
     return (
         <Formik
               initialValues={{ name: "", description: "",fee:"",duration:"" }}
@@ -20,6 +25,8 @@ const Course = () => {
                 console.log(values);
                 createcourse(values).then(response => {
                     console.log(response)
+                    navigation('/');
+
                 })
                 .catch(function (error) {
                 console.log(error);
@@ -29,15 +36,18 @@ const Course = () => {
                 {({ touched, errors, isSubmitting, values,handleChange,handleBlur,handleSubmit }) =>
                 <Form>
                 <h4>Add course</h4>
-                <TextField
-                    fullWidth 
-                    variant="outlined"
-                    label="Name"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                />
+                <div className='form-input'>
+                    <TextField
+                        fullWidth 
+                        variant="outlined"
+                        label="Name"
+                        name="name"
+                        value={values.name}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                    />
+                </div>
+                <div className='form-input'>
                 <TextField
                     fullWidth 
                     variant="outlined"
@@ -48,6 +58,8 @@ const Course = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                 />
+                </div>
+                <div className='form-input'>
                 <TextField
                     fullWidth 
                     variant="outlined"
@@ -58,6 +70,8 @@ const Course = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                 />
+                </div>
+                <div className='form-input'>
                 <TextField
                     fullWidth 
                     variant="outlined"
@@ -67,6 +81,7 @@ const Course = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                 />
+                </div>
                 <div>
                     <Button variant="outlined" size="small" type="submit" >Submit</Button>
                 </div>

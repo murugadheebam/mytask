@@ -22,27 +22,30 @@ exports.create = async (req,res) => {
 }
 exports.update = async (req,res) => {
   try{
-   User.findOneAndUpdate({_id:req.body.data._id}, req.body.data, function (err, user) {
-    if(user){
-      res.status(201).json({status:"success"});
-    }else{
-      res.status(201).json({status:"failure"});
+    console.log(req.body)
+    const filter = { _id:req.body._id };
+    const update = { name:req.body.name,description:req.body.description,fee:req.body.fee,duration:req.body.duration};
+    await Course.findOneAndUpdate(filter, update).then((data)=>{
+      if(data){
+        res.status(201).json({status:"success"});
+      }else{
+        res.status(201).json({status:"failure"});
 
-    }
-  });
-  
+      }
+    })
   }  
   catch(e){
+    console.log(e)
   }
 }
 
 exports.getcourses = async (req,res) => {
-  var users=await User.find()
-  res.status(201).json({status:"success",users:users});
+  var courses=await Course.find()
+  res.status(201).json({status:"success",courses:courses});
  
 }
 exports.getcoursebyid = async (req,res) => {
-  var users=await User.find({_id:req.query.id})
-  res.status(201).json({status:"success",users:users});
+  var course=await Course.find({_id:req.query.id})
+  res.status(201).json({status:"success",course:course});
 
 }                                                                                                                                                    

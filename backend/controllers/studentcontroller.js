@@ -1,23 +1,23 @@
-const Student = require('../models/commonmodels.js');
+const {Student} = require('../models/commonmodels');
 
 
 exports.create = async (req,res) => {
    try{
-    // console.log(req.body.user)
-    const { username, email, mobileno, password ,userrole} = req.body.user;
-    console.log(username);
-    console.log(email)
-    const user = await Student.create({
-        username,
-        email,
-        mobileno,
-        password,
-        userrole,
-      });
-    res.status(201).json(user);
+    const { name, gender, dob, email ,mobileno,course} = req.body;
+    var profile=req.files.profile[0].filename
+    const student = await Student.create({
+      name,
+      gender,
+      dob,
+      email,
+      mobileno,
+      course,
+      profile
+    });
+    res.status(201).json(student);
    }  
    catch(e){
-    res.status(201).json(user);
+    res.status(201).json(e);
    }
 }
 exports.update = async (req,res) => {
@@ -37,12 +37,12 @@ exports.update = async (req,res) => {
 }
 
 exports.getstudents = async (req,res) => {
-  var users=await Student.find()
-  res.status(201).json({status:"success",users:users});
+  var students=await Student.find()
+  res.status(201).json({status:"success",students:students});
  
 }
 exports.getstudentsbyid = async (req,res) => {
-  var users=await Student.find({_id:req.query.id})
-  res.status(201).json({status:"success",users:users});
+  var student=await Student.find({_id:req.query.id})
+  res.status(201).json({status:"success",student:student});
 
 }                                                                                                                                                    

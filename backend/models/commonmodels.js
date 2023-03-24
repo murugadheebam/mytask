@@ -9,12 +9,27 @@ const CourseSchema = new mongoose.Schema({
 
 const StaffSchema = new mongoose.Schema({
     name: { type: String},
+    gender: { type: String},
+    dob:{type : Date},
+    email:{ type: String},
+    mobileno:{ type: Number},
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'course' },
+    profile: { type: String },
+
+
   
 });
 
 const StudentSchema = new mongoose.Schema({
     name: { type: String},
-  
+    gender: { type: String},
+    dob:{type : Date},
+    email:{ type: String},
+    mobileno:{ type: Number},
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'course' },
+    profile: { type: String },
+
+
 });
 
 
