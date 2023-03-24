@@ -5,6 +5,7 @@ router.post('/create', student.create);
 router.get('/getstudents', student.getstudents);
 router.get('/getstudentsbyid', student.getstudentsbyid);
 router.post('/update', student.update);
+router.get('/deletestudent', student.deletestudent);
 
 
 module.exports = router;

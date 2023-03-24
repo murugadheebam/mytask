@@ -13,3 +13,6 @@ export function getallcourse (data){
 export function getcoursebyid (id){
     return config.get('course/getcoursebyid',{params: { id: id}})
 }
+export function deletecourse (id){
+    return config.get('course/deletecourse',{params: { id: id}})
+}

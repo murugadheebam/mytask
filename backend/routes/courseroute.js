@@ -5,6 +5,7 @@ router.post('/create', course.create);
 router.get('/getcourses', course.getcourses);
 router.get('/getcoursebyid', course.getcoursebyid);
 router.post('/update', course.update);
+router.get('/deletecourse', course.deletecourse);
 
 
 module.exports = router;

@@ -29,7 +29,6 @@ const multerStorage = multer.diskStorage({
     cb(null, "uploads");
   },
   filename: (req, file, cb) => {
-    console.log(file)
     const ext = file.mimetype.split("/")[1];
     if(file.fieldname =='category_image'){
       cb(null, `category-${file.fieldname}-${Date.now()}.${ext}`);

@@ -5,6 +5,8 @@ const CourseSchema = new mongoose.Schema({
   description: { type: String},
   fee: { type: Number},
   duration: { type: Number},
+  status: { type: Number,default: 0 },
+
 });
 
 const StaffSchema = new mongoose.Schema({
@@ -15,9 +17,7 @@ const StaffSchema = new mongoose.Schema({
     mobileno:{ type: Number},
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'course' },
     profile: { type: String },
-
-
-  
+    status: { type: Number,default: 0 },
 });
 
 const StudentSchema = new mongoose.Schema({
@@ -28,6 +28,8 @@ const StudentSchema = new mongoose.Schema({
     mobileno:{ type: Number},
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'course' },
     profile: { type: String },
+    status: { type: Number,default: 0 },
+
 
 
 });

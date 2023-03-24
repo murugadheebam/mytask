@@ -14,3 +14,13 @@ export function getallstudents (data){
 export function getstudentbyid (id){
     return config.get('student/getstudentsbyid',{params: { id: id}})
 }
+export function updatestudent (data){
+    return config.post('student/update',data,{
+        headers: {
+            "content-type": "multipart/form-data",
+        },
+    })
+}
+export function deletestudent (id){
+    return config.get('student/deletestudent',{params: { id: id}})
+}

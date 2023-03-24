@@ -7,12 +7,14 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { getallstudents } from '../services/studentservice';
+import { getallstudents,deletestudent } from '../services/studentservice';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import moment from 'moment'
 
 const Studentlist = () => {
     const [students, setStudents] = useState([])
+    const [isdelete, setdelete] = useState(false)
 
     useEffect(() => {
         getallstudents().then(response => {
@@ -22,7 +24,13 @@ const Studentlist = () => {
                 console.log(error);
             })
 
-    }, [])
+    }, [isdelete])
+    
+    const deletStudent = (id) => {
+        deletestudent(id).then((data)=>{
+            setdelete(true)
+        })
+    }
     return (
         <>
             <a href='/addstudent' className="btn btn-outline-primary waves-effect"><span>Create</span></a>
@@ -47,12 +55,12 @@ const Studentlist = () => {
                                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.email}</TableCell>
-                                    <TableCell>{row.dob}</TableCell>
+                                    <TableCell>{moment(row.dob).format('DD-MM-YYYY')}</TableCell>
                                     <TableCell>{row.gender}</TableCell>
                                     <TableCell>{row.mobileno}</TableCell>
                                     <TableCell>
                                         <a href={"/editstudent/" + row._id} className="btn btn-outline-primary waves-effect"><EditIcon/></a>
-                                        <a href='/addcourse' className="btn btn-outline-primary waves-effect"><DeleteIcon/></a>
+                                        <button className="btn btn-outline-primary waves-effect" onClick={()=> deletStudent(row._id)}><DeleteIcon/></button>
 
                                     </TableCell>
 

@@ -13,9 +13,10 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { useNavigate } from "react-router-dom";
-import { getstudentbyid } from '../services/studentservice';
+import { getstudentbyid,updatestudent } from '../services/studentservice';
 import { useParams } from 'react-router';
-
+import dayjs, { Dayjs } from 'dayjs';
+import moment from 'moment'
 
 const CourseSchema = Yup.object().shape({
     name: Yup.string()
@@ -31,160 +32,169 @@ const EditStudent = () => {
     const [selectedFile, setSelectedFile] = useState()
     const [courses, setCourses] = useState([])
     const [student, setStudent] = useState({})
+    const [course, setCourse] = useState('')
+    const [dob, setDob] = useState('')
 
 
     const getFile = e => {
         setSelectedFile(e.target.files[0])
     }
     useEffect(() => {
-        getallcourse().then(response => {
-            setCourses(response.data.courses)
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
 
         getstudentbyid(params.id).then(response => {
-            console.log(response.data.student[0])
+            // console.log(response.data.student[0])
             setStudent(response.data.student[0])
+            setDob(dayjs(moment(response.data.student[0].dob).format('MM/DD/YYYY')))
+            setCourse(response.data.student[0].course)
+
         })
             .catch(function (error) {
                 console.log(error);
+            })
+
+        getallcourse().then(response => {
+            setCourses(response.data.courses)
         })
+            .catch(function (error) {
+                console.log(error);
+            })
+
 
     }, [])
     return (
         <>
-        {console.log(student)}
-        <Formik
-            initialValues={{ name: student.name, gender: student.gender, dob: "", email: student.email, mobileno: student.mobileno ,course_id:student.course}}
-            validationSchema={CourseSchema}
-            onSubmit={(values) => {
-                console.log(values);
-                const formData = new FormData();
-                formData.append("gender", values.gender);
-                formData.append("name", values.name);
-                formData.append("dob", values.dob);
-                formData.append("email", values.email);
-                formData.append("mobileno", values.mobileno);
-                formData.append("profile", selectedFile);
-                formData.append("course", values.course_id);
-                createstudent(formData).then(response => {
-                    navigation('/student');
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-            }}
-        >
-            {({ touched, errors, isSubmitting, setFieldValue, values, handleChange, handleBlur, handleSubmit }) =>
-                <Form>
-                    <h4>Edit Student</h4>
-                    <div className='form-input'>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            label="Name"
-                            name="name"
-                            value={values.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                    </div>
+            <Formik
+                initialValues={{ name: student.name, gender: student.gender, dob: student.dob, email: student.email, mobileno: student.mobileno, course_id: student.course,_id:student._id }}
+                enableReinitialize
+                validationSchema={CourseSchema}
+                onSubmit={(values) => {
+                    console.log(values);
+                    const formData = new FormData();
+                    formData.append("gender", values.gender);
+                    formData.append("name", values.name);
+                    formData.append("dob", dob);
+                    formData.append("email", values.email);
+                    formData.append("mobileno", values.mobileno);
+                    formData.append("profile", selectedFile);
+                    formData.append("course", course);
+                    formData.append("_id", student._id);
 
-                    <div className='form-input'>
-                        <FormLabel id="gender">Gender</FormLabel>
-                        <RadioGroup
-                            aria-labelledby="gender"
-                            name="gender"
-                            value={values.gender}
-                            onChange={(value) => setFieldValue("gender", value.target.value)}
-                            row
-                        >
-                            <FormControlLabel value="female" control={<Radio />} label="Female" checked={student.gender == 'female'}/>
-                            <FormControlLabel value="male" control={<Radio />} label="Male" checked={student.gender == 'male'}/>
-                            <FormControlLabel value="other" control={<Radio />} label="Other" checked={student.gender == 'other'}/>
-                        </RadioGroup>
-                    </div>
+                    
+                    updatestudent(formData).then(response => {
+                        navigation('/student');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                }}
+            >
+                {({ touched, errors, isSubmitting, setFieldValue, values, handleChange, handleBlur, handleSubmit }) =>
+                    <Form>
+                        <h4>Edit Student</h4>
+                        <div className='form-input'>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                InputLabelProps={{ shrink: true }}
+                                label="Name"
+                                name="name"
+                                value={values.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                        </div>
 
-                    <div className='form-input'>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DatePicker']}>
-                                <DatePicker label="Date of Birth"
-                                    value={values.dob}
-                                    onChange={(value) => setFieldValue("dob", value, true)}
-                                />
-                            </DemoContainer>
-                        </LocalizationProvider>
+                        <div className='form-input'>
+                            <FormLabel id="gender">Gender</FormLabel>
+                            <RadioGroup
+                                aria-labelledby="gender"
+                                name="gender"
+                                value={values.gender}
+                                onChange={(value) => setFieldValue("gender", value.target.value)}
+                                row
+                            >
+                                <FormControlLabel value="female" control={<Radio />} label="Female" checked={student.gender == 'female'} />
+                                <FormControlLabel value="male" control={<Radio />} label="Male" checked={student.gender == 'male'} />
+                                <FormControlLabel value="other" control={<Radio />} label="Other" checked={student.gender == 'other'} />
+                            </RadioGroup>
+                        </div>
+                        {console.log(dob)}
+                        <div className='form-input'>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['DatePicker']}>
+                                    <DatePicker label="Date of Birth"
+                                        value={dob}
+                                        onChange={(value) => {
+                                            setFieldValue("dob", value, true)
+                                            setDob(value)
+                                        }}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
 
-                    </div>
+                        </div>
 
-                    <div className='form-input'>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            label="Email"
-                            name="email"
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                    </div>
+                        <div className='form-input'>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                label="Email"
+                                name="email"
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                InputLabelProps={{ shrink: true }}
 
-                    <div className='form-input'>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            label="Mobile No"
-                            name="mobileno"
-                            value={values.mobileno}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                    </div>
-                    <div className='form-input'>
-                        <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Course</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={values.course_id}
-                            label="Course"
-                            onChange={(value) => setFieldValue("course_id", value.target.value)}
-                        >
-                            {courses.length >0 && courses.map((row) => {
+                            />
+                        </div>
+
+                        <div className='form-input'>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                label="Mobile No"
+                                name="mobileno"
+                                value={values.mobileno}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                InputLabelProps={{ shrink: true }}
+
+                            />
+                        </div>
+                        <div className='form-input'>
+                            <select className='form-control'  onChange={(value) => {
+                                setCourse(value.target.value)}}>
+                            <option value="">Select</option>
+                            {courses.map((row) => {
                             return (
-                                <MenuItem value={row._id} key={row._id}>{row.name}</MenuItem>
+                                <option value={row._id} key={row._id} selected={row._id == course}>{row.name}</option>
                             )})
                             }
-                           
-                          
-                        </Select>
-                        </FormControl>
-                    </div>
-                    <div className='form-input'>
-                        <input
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            id="raised-button-file"
-                            type="file"
-                            onChange={getFile}
-                        />
-                        <label htmlFor="raised-button-file">
-                            <Button variant="raised" component="span" >
-                                Profile Image
-                            </Button>
-                        </label>
-                    </div>
+                            </select>
+                        </div>
+                        <div className='form-input'>
+                            <input
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                id="raised-button-file"
+                                type="file"
+                                onChange={getFile}
+                            />
+                            <label htmlFor="raised-button-file">
+                                <Button variant="raised" component="span" >
+                                    Profile Image
+                                </Button>
+                            </label>
+                        </div>
 
 
-                    <div>
-                        <Button variant="outlined" size="small" type="submit" >Submit</Button>
-                    </div>
-                </Form>
+                        <div>
+                            <Button variant="outlined" size="small" type="submit" >Submit</Button>
+                        </div>
+                    </Form>
 
-            }
-        </Formik>
+                }
+            </Formik>
         </>
 
     );

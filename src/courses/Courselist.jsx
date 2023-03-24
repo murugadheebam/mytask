@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { TextField, Button } from '@mui/material';
-import { getallcourse } from '../services/courseservice';
+import { getallcourse,deletecourse } from '../services/courseservice';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,6 +15,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const Courselist = () => {
     const [courses, setCourses] = useState([])
+    const [isdelete, setdelete] = useState(false)
 
     useEffect(() => {
         getallcourse().then(response => {
@@ -25,7 +26,13 @@ const Courselist = () => {
                 console.log(error);
             })
 
-    }, [])
+    }, [isdelete])
+    
+    const delete_course = (id) => {
+        deletecourse(id).then((data)=>{
+            setdelete(true)
+        })
+    }
     return (
         <>
             <a href='/addcourse' className="btn btn-outline-primary waves-effect"><span>Create</span></a>
@@ -54,7 +61,8 @@ const Courselist = () => {
                                     <TableCell>{row.duration}</TableCell>
                                     <TableCell>
                                         <a href={"/editcourse/" + row._id} className="btn btn-outline-primary waves-effect"><EditIcon/></a>
-                                        <a href='/addcourse' className="btn btn-outline-primary waves-effect"><DeleteIcon/></a>
+                                        <button className="btn btn-outline-primary waves-effect" onClick={()=> delete_course(row._id)}><DeleteIcon/></button>
+
                                     </TableCell>
 
                                 </TableRow>

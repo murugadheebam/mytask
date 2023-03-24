@@ -14,3 +14,14 @@ export function getallstaff (data){
 export function getstaffbyid (id){
     return config.get('staff/getstaffbyid',{params: { id: id}})
 }
+export function updatestaff (data){
+    return config.post('staff/update',data,{
+        headers: {
+            "content-type": "multipart/form-data",
+        },
+    })
+}
+export function deletestaff (id){
+    console.log(id);
+    return config.get('staff/deletestaff',{params: { id: id}})
+}
