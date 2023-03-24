@@ -1,4 +1,4 @@
-const Course = require('../models/commonmodels');
+const {Course} = require('../models/commonmodels');
 
 
 exports.create = async (req,res) => {

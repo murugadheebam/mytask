@@ -23,8 +23,4 @@ module.exports = {
   Course: mongoose.model("course", CourseSchema),
   Staff: mongoose.model("staff", StaffSchema),
   Student: mongoose.model("student", StudentSchema),
-
-
-
-
 };
